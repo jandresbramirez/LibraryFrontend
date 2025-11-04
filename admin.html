@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración - Biblioteca Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-6">
+                    <a href="dashboard.html" class="flex items-center space-x-3">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        <i class="fas fa-cog text-xl"></i>
+                        <h1 class="text-xl font-bold">Panel de Administración</h1>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-indigo-200 hidden md:block">
+                        <i class="fas fa-crown mr-1"></i>Modo Administrador
+                    </span>
+                    <button id="logout-btn" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-1"></i>Salir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Admin Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Panel de Administración</h1>
+            <p class="text-gray-600">Gestiona usuarios, configuración del sistema y estadísticas globales</p>
+        </div>
+
+        <!-- Admin Tabs -->
+        <div class="bg-white rounded-xl shadow-md border border-gray-200 mb-6">
+            <div class="border-b border-gray-200">
+                <nav class="flex overflow-x-auto">
+                    <button id="tab-users" class="tab-button active px-6 py-4 border-b-2 border-indigo-600 text-indigo-600 font-medium">
+                        <i class="fas fa-users mr-2"></i>Usuarios
+                    </button>
+                    <button id="tab-stats" class="tab-button px-6 py-4 text-gray-500 hover:text-gray-700 font-medium">
+                        <i class="fas fa-chart-bar mr-2"></i>Estadísticas
+                    </button>
+                    <button id="tab-system" class="tab-button px-6 py-4 text-gray-500 hover:text-gray-700 font-medium">
+                        <i class="fas fa-sliders-h mr-2"></i>Sistema
+                    </button>
+                    <button id="tab-reports" class="tab-button px-6 py-4 text-gray-500 hover:text-gray-700 font-medium">
+                        <i class="fas fa-file-alt mr-2"></i>Reportes
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="tab-content">
+            <!-- Users Tab -->
+            <div id="users-tab" class="tab-panel active">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    <!-- Sidebar - User Management -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <!-- Create User -->
+                        <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-user-plus mr-2 text-green-500"></i>Crear Usuario
+                            </h3>
+                            <form id="create-user-form" class="space-y-4">
+                                <div>
+                                    <label for="admin-user-name" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Nombre Completo *
+                                    </label>
+                                    <input type="text" id="admin-user-name" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                        placeholder="Nombre del usuario">
+                                </div>
+                                <div>
+                                    <label for="admin-user-email" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Correo Electrónico *
+                                    </label>
+                                    <input type="email" id="admin-user-email" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                        placeholder="usuario@email.com">
+                                </div>
+                                <div>
+                                    <label for="admin-user-password" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Contraseña *
+                                    </label>
+                                    <input type="password" id="admin-user-password" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                        placeholder="Mínimo 6 caracteres">
+                                </div>
+                                <div>
+                                    <label for="admin-user-role" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Rol del Usuario *
+                                    </label>
+                                    <select id="admin-user-role" required
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                        <option value="user">Usuario</option>
+                                        <option value="editor">Editor</option>
+                                        <option value="admin">Administrador</option>
+                                    </select>
+                                </div>
+                                <button type="submit" id="create-user-btn" 
+                                        class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200">
+                                    <i class="fas fa-plus mr-2"></i>Crear Usuario
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- User Search -->
+                        <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <i class="fas fa-search mr-2 text-blue-500"></i>Buscar Usuario
+                            </h3>
+                            <form id="search-user-form" class="space-y-4">
+                                <div>
+                                    <label for="search-user-type" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Buscar por
+                                    </label>
+                                    <select id="search-user-type"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option value="id">ID</option>
+                                        <option value="email">Email</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="search-user-value" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Valor
+                                    </label>
+                                    <input type="text" id="search-user-value"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="Ingresa el valor">
+                                </div>
+                                <button type="submit" id="search-user-btn"
+                                        class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                                    <i class="fas fa-search mr-2"></i>Buscar Usuario
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Main Content - Users List -->
+                    <div class="lg:col-span-3">
+                        <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 space-y-4 lg:space-y-0">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-800">Gestión de Usuarios</h2>
+                                    <p class="text-gray-600 text-sm mt-1" id="users-count">Cargando...</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button id="export-users-btn" 
+                                            class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition duration-200 flex items-center">
+                                        <i class="fas fa-download mr-2"></i>Exportar
+                                    </button>
+                                    <button id="refresh-users-btn" 
+                                            class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200 flex items-center">
+                                        <i class="fas fa-sync-alt mr-2"></i>Actualizar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Users Table -->
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="bg-gray-50 border-b border-gray-200">
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="users-table-body" class="divide-y divide-gray-200">
+                                        <!-- Se llena dinámicamente -->
+                                        <tr>
+                                            <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+                                                <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                                                <p>Cargando usuarios...</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Tab -->
+            <div id="stats-tab" class="tab-panel hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Total Users -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">Total Usuarios</p>
+                                <p class="text-3xl font-bold text-indigo-600" id="stats-total-users">--</p>
+                            </div>
+                            <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-users text-indigo-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Books -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">Total Libros</p>
+                                <p class="text-3xl font-bold text-green-600" id="stats-total-books">--</p>
+                            </div>
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-book text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Loans -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">Préstamos Activos</p>
+                                <p class="text-3xl font-bold text-blue-600" id="stats-active-loans">--</p>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-exchange-alt text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overdue Loans -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 text-sm font-medium">Préstamos Vencidos</p>
+                                <p class="text-3xl font-bold text-red-600" id="stats-overdue-loans">--</p>
+                            </div>
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Placeholder -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6">Estadísticas del Sistema</h3>
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-chart-bar text-4xl mb-4 opacity-50"></i>
+                        <p>Gráficos y estadísticas detalladas en desarrollo</p>
+                        <p class="text-sm mt-2">Aquí se mostrarán gráficos de uso, tendencias y métricas del sistema</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Tab -->
+            <div id="system-tab" class="tab-panel hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- System Settings -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-6">Configuración del Sistema</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="flex items-center justify-between cursor-pointer">
+                                    <span class="text-gray-700 font-medium">Modo Mantenimiento</span>
+                                    <div class="relative">
+                                        <input type="checkbox" class="sr-only" id="maintenance-mode">
+                                        <div class="block bg-gray-600 w-14 h-8 rounded-full"></div>
+                                        <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                                    </div>
+                                </label>
+                                <p class="text-sm text-gray-500 mt-1">Bloquear el acceso al público durante mantenimiento</p>
+                            </div>
+
+                            <div>
+                                <label class="flex items-center justify-between cursor-pointer">
+                                    <span class="text-gray-700 font-medium">Registro de Actividad</span>
+                                    <div class="relative">
+                                        <input type="checkbox" class="sr-only" id="activity-logging" checked>
+                                        <div class="block bg-green-600 w-14 h-8 rounded-full"></div>
+                                        <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform translate-x-6"></div>
+                                    </div>
+                                </label>
+                                <p class="text-sm text-gray-500 mt-1">Registrar actividades de usuarios en el sistema</p>
+                            </div>
+
+                            <div>
+                                <label for="loan-duration" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Duración de Préstamos (días)
+                                </label>
+                                <input type="number" id="loan-duration" value="30"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <p class="text-sm text-gray-500 mt-1">Número de días para la devolución de libros</p>
+                            </div>
+
+                            <button class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200">
+                                <i class="fas fa-save mr-2"></i>Guardar Configuración
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- System Actions -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-6">Acciones del Sistema</h3>
+                        <div class="space-y-4">
+                            <button class="w-full text-left px-4 py-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition duration-200 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-database mr-3 text-blue-500"></i>
+                                    <span>Respaldar Base de Datos</span>
+                                </div>
+                                <i class="fas fa-chevron-right text-blue-400"></i>
+                            </button>
+
+                            <button class="w-full text-left px-4 py-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition duration-200 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-sync-alt mr-3 text-green-500"></i>
+                                    <span>Reindexar Buscador</span>
+                                </div>
+                                <i class="fas fa-chevron-right text-green-400"></i>
+                            </button>
+
+                            <button class="w-full text-left px-4 py-3 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition duration-200 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-trash-alt mr-3 text-purple-500"></i>
+                                    <span>Limpiar Cache</span>
+                                </div>
+                                <i class="fas fa-chevron-right text-purple-400"></i>
+                            </button>
+
+                            <div class="border-t border-gray-200 pt-4 mt-4">
+                                <button class="w-full text-left px-4 py-3 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition duration-200 flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-3 text-red-500"></i>
+                                        <span>Restablecer Sistema</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-red-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports-tab" class="tab-panel hidden">
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6">Generar Reportes</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Report Cards -->
+                        <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                            <i class="fas fa-users text-3xl text-blue-500 mb-4"></i>
+                            <h4 class="font-semibold text-gray-800 mb-2">Reporte de Usuarios</h4>
+                            <p class="text-gray-600 text-sm mb-4">Listado completo de usuarios registrados</p>
+                            <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+                                <i class="fas fa-download mr-2"></i>Generar
+                            </button>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                            <i class="fas fa-book text-3xl text-green-500 mb-4"></i>
+                            <h4 class="font-semibold text-gray-800 mb-2">Reporte de Libros</h4>
+                            <p class="text-gray-600 text-sm mb-4">Inventario completo de libros</p>
+                            <button class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-200">
+                                <i class="fas fa-download mr-2"></i>Generar
+                            </button>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                            <i class="fas fa-exchange-alt text-3xl text-purple-500 mb-4"></i>
+                            <h4 class="font-semibold text-gray-800 mb-2">Reporte de Préstamos</h4>
+                            <p class="text-gray-600 text-sm mb-4">Historial de préstamos y devoluciones</p>
+                            <button class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-200">
+                                <i class="fas fa-download mr-2"></i>Generar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Container -->
+    <div id="message-container" class="fixed top-4 right-4 z-50"></div>
+
+    <style>
+        .tab-button {
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .tab-button:hover {
+            background-color: #f8fafc;
+        }
+        .tab-button.active {
+            border-bottom-width: 2px;
+            border-color: #4f46e5;
+            color: #4f46e5;
+        }
+        .tab-panel {
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</body>
+</html>

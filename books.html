@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libros - Biblioteca Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-6">
+                    <a href="dashboard.html" class="flex items-center space-x-3">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        <i class="fas fa-book text-xl"></i>
+                        <h1 class="text-xl font-bold">Gestión de Libros</h1>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-indigo-200 hidden md:block">Catálogo Bibliográfico</span>
+                    <button id="logout-btn" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-1"></i>Salir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar - Forms -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Create Book Form -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-plus-circle mr-2 text-green-500"></i>Nuevo Libro
+                    </h3>
+                    <form id="create-book-form" class="space-y-4">
+                        <div>
+                            <label for="book-title" class="block text-sm font-medium text-gray-700 mb-1">
+                                Título del Libro *
+                            </label>
+                            <input type="text" id="book-title" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                placeholder="Ej: Cien años de soledad">
+                        </div>
+                        <div>
+                            <label for="book-author-id" class="block text-sm font-medium text-gray-700 mb-1">
+                                Autor *
+                            </label>
+                            <select id="book-author-id" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <option value="">Cargando autores...</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="create-book-btn" 
+                                class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200">
+                            <i class="fas fa-plus mr-2"></i>Crear Libro
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Search Book by ID -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-search mr-2 text-blue-500"></i>Buscar por ID
+                    </h3>
+                    <form id="search-book-form" class="space-y-4">
+                        <div>
+                            <label for="search-book-id" class="block text-sm font-medium text-gray-700 mb-1">
+                                ID del Libro
+                            </label>
+                            <input type="number" id="search-book-id"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Ej: 123">
+                        </div>
+                        <button type="submit" id="search-book-btn"
+                                class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                            <i class="fas fa-search mr-2"></i>Buscar Libro
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Search by Author -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-user-edit mr-2 text-purple-500"></i>Buscar por Autor
+                    </h3>
+                    <form id="search-by-author-form" class="space-y-4">
+                        <div>
+                            <label for="search-author-id" class="block text-sm font-medium text-gray-700 mb-1">
+                                Seleccionar Autor
+                            </label>
+                            <select id="search-author-id"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">Cargando autores...</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="search-by-author-btn"
+                                class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200">
+                            <i class="fas fa-filter mr-2"></i>Filtrar por Autor
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Update Book -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-edit mr-2 text-orange-500"></i>Actualizar Libro
+                    </h3>
+                    <form id="update-book-form" class="space-y-4">
+                        <div>
+                            <label for="update-book-id" class="block text-sm font-medium text-gray-700 mb-1">
+                                ID del Libro *
+                            </label>
+                            <input type="number" id="update-book-id" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                placeholder="Ej: 123">
+                        </div>
+                        <div>
+                            <label for="update-book-title" class="block text-sm font-medium text-gray-700 mb-1">
+                                Nuevo Título
+                            </label>
+                            <input type="text" id="update-book-title"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                placeholder="Nuevo título del libro">
+                        </div>
+                        <div>
+                            <label for="update-book-author-id" class="block text-sm font-medium text-gray-700 mb-1">
+                                Nuevo Autor
+                            </label>
+                            <select id="update-book-author-id"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                <option value="">Mismo autor</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="update-book-btn"
+                                class="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-200">
+                            <i class="fas fa-save mr-2"></i>Actualizar Libro
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Main Content - Books List -->
+            <div class="lg:col-span-3">
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <!-- Header with Search -->
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 space-y-4 lg:space-y-0">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Catálogo de Libros</h2>
+                            <p class="text-gray-600 text-sm mt-1" id="books-count">Cargando...</p>
+                        </div>
+                        <div class="flex-1 lg:max-w-md lg:ml-4">
+                            <div class="relative">
+                                <input type="text" id="search-books-input" 
+                                       class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                       placeholder="Buscar libros por título o autor...">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Books Grid -->
+                    <div id="books-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Se carga dinámicamente -->
+                        <div class="col-span-2 flex justify-center py-12">
+                            <div class="text-center">
+                                <i class="fas fa-spinner fa-spin text-3xl text-gray-400 mb-4"></i>
+                                <p class="text-gray-500">Cargando catálogo de libros...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book Detail -->
+                    <div id="book-detail" class="mt-6 hidden">
+                        <!-- Se carga dinámicamente cuando se busca un libro -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Container -->
+    <div id="message-container" class="fixed top-4 right-4 z-50"></div>
+    
+</body>
+</html>

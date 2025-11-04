@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Biblioteca Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-6">
+                    <a href="dashboard.html" class="flex items-center space-x-3">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        <i class="fas fa-user text-xl"></i>
+                        <h1 class="text-xl font-bold">Mi Perfil</h1>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-indigo-200 hidden md:block" id="user-welcome">
+                        <!-- Se llena dinámicamente -->
+                    </span>
+                    <button id="logout-btn" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-1"></i>Salir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Mi Perfil</h1>
+                <p class="text-gray-600">Gestiona tu información personal y preferencias</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Sidebar - User Info -->
+                <div class="lg:col-span-1">
+                    <!-- Profile Card -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6 mb-6">
+                        <div class="text-center">
+                            <div class="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-user text-indigo-600 text-3xl"></i>
+                            </div>
+                            <h2 id="profile-name" class="text-xl font-semibold text-gray-800 mb-1">Cargando...</h2>
+                            <p id="profile-email" class="text-gray-600 mb-3">cargando...</p>
+                            <div id="role-badge" class="inline-block px-3 py-1 rounded-full text-sm font-medium mb-4">
+                                <!-- Se llena dinámicamente -->
+                            </div>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <div class="flex justify-between">
+                                    <span>ID de Usuario:</span>
+                                    <span id="profile-id" class="font-medium">--</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Miembro desde:</span>
+                                    <span class="font-medium">2024</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Estado:</span>
+                                    <span class="font-medium text-green-600">Activo</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                        <h3 class="font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-chart-line mr-2 text-blue-500"></i>Mis Estadísticas
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Préstamos Activos:</span>
+                                <span id="stats-active-loans" class="font-semibold text-blue-600">--</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Total Préstamos:</span>
+                                <span id="stats-total-loans" class="font-semibold text-green-600">--</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Libros Leídos:</span>
+                                <span id="stats-books-read" class="font-semibold text-purple-600">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content - Forms -->
+                <div class="lg:col-span-2">
+                    <!-- Update Profile Form -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6 mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-user-edit mr-2 text-green-500"></i>Actualizar Información
+                        </h2>
+                        
+                        <form id="update-profile-form" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="update-name" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Nombre Completo *
+                                    </label>
+                                    <input type="text" id="update-name" required
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
+                                        placeholder="Tu nombre completo">
+                                </div>
+                                
+                                <div>
+                                    <label for="update-email" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Correo Electrónico *
+                                    </label>
+                                    <input type="email" id="update-email" required
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
+                                        placeholder="tu@email.com">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="update-password" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Nueva Contraseña
+                                </label>
+                                <input type="password" id="update-password"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
+                                    placeholder="Dejar en blanco para no cambiar">
+                                <p class="text-xs text-gray-500 mt-1">Mínimo 6 caracteres</p>
+                            </div>
+
+                            <div class="flex space-x-4">
+                                <button type="submit" id="update-profile-btn"
+                                        class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200 flex items-center">
+                                    <i class="fas fa-save mr-2"></i>Guardar Cambios
+                                </button>
+                                <button type="button" id="reset-form-btn"
+                                        class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200 flex items-center">
+                                    <i class="fas fa-undo mr-2"></i>Restablecer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- My Active Loans -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-book-reader mr-2 text-blue-500"></i>Mis Préstamos Activos
+                        </h2>
+                        
+                        <div id="my-loans-container" class="space-y-4">
+                            <div class="text-center py-8 text-gray-500">
+                                <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                                <p>Cargando préstamos...</p>
+                            </div>
+                        </div>
+
+                        <div id="no-loans-message" class="hidden text-center py-8">
+                            <i class="fas fa-book-open text-4xl text-gray-300 mb-4"></i>
+                            <h3 class="text-lg font-semibold text-gray-500 mb-2">No tienes préstamos activos</h3>
+                            <p class="text-gray-400">Visita la sección de libros para realizar un préstamo</p>
+                            <a href="books.html" class="inline-block mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition duration-200">
+                                <i class="fas fa-book mr-2"></i>Explorar Libros
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Account Actions -->
+                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-cog mr-2 text-purple-500"></i>Acciones de Cuenta
+                        </h2>
+                        
+                        <div class="space-y-3">
+                            <button id="export-data-btn"
+                                    class="w-full text-left px-4 py-3 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition duration-200 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-download mr-3 text-blue-500"></i>
+                                    <div>
+                                        <div class="font-medium">Exportar Mis Datos</div>
+                                        <div class="text-sm text-blue-600">Descargar información personal y préstamos</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right text-blue-400"></i>
+                            </button>
+
+                            <button id="change-password-btn"
+                                    class="w-full text-left px-4 py-3 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition duration-200 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-key mr-3 text-green-500"></i>
+                                    <div>
+                                        <div class="font-medium">Cambiar Contraseña</div>
+                                        <div class="text-sm text-green-600">Actualizar contraseña de acceso</div>
+                                    </div>
+                                </div>
+                                <i class="fas fa-chevron-right text-green-400"></i>
+                            </button>
+
+                            <div class="border-t border-gray-200 pt-4 mt-4">
+                                <button id="delete-account-btn"
+                                        class="w-full text-left px-4 py-3 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition duration-200 flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-trash-alt mr-3 text-red-500"></i>
+                                        <div>
+                                            <div class="font-medium">Eliminar Cuenta</div>
+                                            <div class="text-sm text-red-600">Eliminar permanentemente mi cuenta</div>
+                                        </div>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-red-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Container -->
+    <div id="message-container" class="fixed top-4 right-4 z-50"></div>
+
+</body>
+</html>
