@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autores - Biblioteca Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation (similar al dashboard) -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-6">
+                    <a href="dashboard.html" class="flex items-center space-x-3">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        <i class="fas fa-book-open text-xl"></i>
+                        <h1 class="text-xl font-bold">Autores</h1>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-indigo-200 hidden md:block">Gestión de Autores</span>
+                    <button id="logout-btn" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-1"></i>Salir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar - Forms -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Create Author Form -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-user-plus mr-2 text-green-500"></i>Nuevo Autor
+                    </h3>
+                    <form id="create-author-form" class="space-y-4">
+                        <div>
+                            <label for="author-name" class="block text-sm font-medium text-gray-700 mb-1">
+                                Nombre del Autor *
+                            </label>
+                            <input type="text" id="author-name" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                placeholder="Ej: Gabriel García Márquez">
+                        </div>
+                        <button type="submit" id="create-author-btn" 
+                                class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200">
+                            <i class="fas fa-plus mr-2"></i>Crear Autor
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Search Author -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-search mr-2 text-blue-500"></i>Buscar Autor
+                    </h3>
+                    <form id="search-author-form" class="space-y-4">
+                        <div>
+                            <label for="search-author-id" class="block text-sm font-medium text-gray-700 mb-1">
+                                ID del Autor
+                            </label>
+                            <input type="number" id="search-author-id"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Ej: 123">
+                        </div>
+                        <button type="submit" id="search-author-btn"
+                                class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                            <i class="fas fa-search mr-2"></i>Buscar Autor
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Update Author -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-edit mr-2 text-purple-500"></i>Actualizar Autor
+                    </h3>
+                    <form id="update-author-form" class="space-y-4">
+                        <div>
+                            <label for="update-author-id" class="block text-sm font-medium text-gray-700 mb-1">
+                                ID del Autor *
+                            </label>
+                            <input type="number" id="update-author-id" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                placeholder="Ej: 123">
+                        </div>
+                        <div>
+                            <label for="update-author-name" class="block text-sm font-medium text-gray-700 mb-1">
+                                Nuevo Nombre *
+                            </label>
+                            <input type="text" id="update-author-name" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                placeholder="Nuevo nombre del autor">
+                        </div>
+                        <button type="submit" id="update-author-btn"
+                                class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200">
+                            <i class="fas fa-save mr-2"></i>Actualizar Autor
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Main Content - Authors List -->
+            <div class="lg:col-span-3">
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Lista de Autores</h2>
+                        <div class="flex items-center space-x-2 text-sm text-gray-600">
+                            <i class="fas fa-info-circle"></i>
+                            <span id="authors-count">Cargando...</span>
+                        </div>
+                    </div>
+
+                    <!-- Authors Grid -->
+                    <div id="authors-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Se carga dinámicamente -->
+                        <div class="col-span-2 flex justify-center py-8">
+                            <i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- Author Detail -->
+                    <div id="author-detail" class="mt-6 hidden">
+                        <!-- Se carga dinámicamente cuando se busca un autor -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Container -->
+    <div id="message-container" class="fixed top-4 right-4 z-50"></div>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Biblioteca Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .stat-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .quick-action {
+            transition: all 0.3s ease;
+        }
+        .quick-action:hover {
+            transform: translateX(5px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo y Navegación -->
+                <div class="flex items-center space-x-6">
+                    <a href="dashboard.html" class="flex items-center space-x-3">
+                        <i class="fas fa-book-open text-2xl"></i>
+                        <h1 class="text-xl font-bold">Biblioteca Digital</h1>
+                    </a>
+                    
+                    <div class="hidden md:flex space-x-4">
+                        <a href="books.html" class="hover:text-indigo-200 transition duration-200">
+                            <i class="fas fa-book mr-1"></i>Libros
+                        </a>
+                        <a href="authors.html" class="hover:text-indigo-200 transition duration-200">
+                            <i class="fas fa-user-edit mr-1"></i>Autores
+                        </a>
+                        <a href="loans.html" class="hover:text-indigo-200 transition duration-200">
+                            <i class="fas fa-exchange-alt mr-1"></i>Préstamos
+                        </a>
+                        <a href="profile.html" class="hover:text-indigo-200 transition duration-200">
+                            <i class="fas fa-user mr-1"></i>Mi Perfil
+                        </a>
+                    </div>
+                </div>
+
+                <!-- User Info y Logout -->
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-3">
+                        <div class="text-right">
+                            <div id="user-welcome" class="text-indigo-200 text-sm"></div>
+                            <div class="text-xs text-indigo-300">Rol: <span id="user-role" class="font-semibold"></span></div>
+                        </div>
+                        <div class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white text-sm"></i>
+                        </div>
+                    </div>
+                    
+                    <button id="logout-btn" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-1"></i>Salir
+                    </button>
+
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-btn" class="md:hidden text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden hidden pb-4 border-t border-indigo-500">
+                <div class="flex flex-col space-y-3">
+                    <a href="books.html" class="flex items-center space-x-2 hover:text-indigo-200">
+                        <i class="fas fa-book w-5"></i>
+                        <span>Libros</span>
+                    </a>
+                    <a href="authors.html" class="flex items-center space-x-2 hover:text-indigo-200">
+                        <i class="fas fa-user-edit w-5"></i>
+                        <span>Autores</span>
+                    </a>
+                    <a href="loans.html" class="flex items-center space-x-2 hover:text-indigo-200">
+                        <i class="fas fa-exchange-alt w-5"></i>
+                        <span>Préstamos</span>
+                    </a>
+                    <a href="profile.html" class="flex items-center space-x-2 hover:text-indigo-200">
+                        <i class="fas fa-user w-5"></i>
+                        <span>Mi Perfil</span>
+                    </a>
+                    <a href="admin.html" id="admin-nav-mobile" class="flex items-center space-x-2 hover:text-indigo-200 hidden">
+                        <i class="fas fa-cog w-5"></i>
+                        <span>Administración</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <!-- Welcome Section -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Dashboard Principal</h1>
+            <p class="text-gray-600" id="welcome-message">Bienvenido de vuelta a la biblioteca digital</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Books -->
+            <div class="stat-card bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Total de Libros</p>
+                        <p class="text-3xl font-bold text-indigo-600" id="total-books">--</p>
+                    </div>
+                    <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-book text-indigo-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-600 text-sm font-medium">
+                        <i class="fas fa-arrow-up mr-1"></i>12% este mes
+                    </span>
+                </div>
+            </div>
+
+            <!-- Total Authors -->
+            <div class="stat-card bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Autores Registrados</p>
+                        <p class="text-3xl font-bold text-green-600" id="total-authors">--</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user-edit text-green-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-600 text-sm font-medium">
+                        <i class="fas fa-arrow-up mr-1"></i>5% este mes
+                    </span>
+                </div>
+            </div>
+
+            <!-- Active Loans -->
+            <div class="stat-card bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Préstamos Activos</p>
+                        <p class="text-3xl font-bold text-blue-600" id="active-loans">--</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-exchange-alt text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-red-600 text-sm font-medium">
+                        <i class="fas fa-arrow-down mr-1"></i>3% este mes
+                    </span>
+                </div>
+            </div>
+
+            <!-- Total Users -->
+            <div class="stat-card bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm font-medium">Usuarios Registrados</p>
+                        <p class="text-3xl font-bold text-purple-600" id="total-users">--</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-users text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-green-600 text-sm font-medium">
+                        <i class="fas fa-arrow-up mr-1"></i>8% este mes
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions and User Info -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Quick Actions -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-6">Acciones Rápidas</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Books Actions -->
+                        <div class="space-y-3">
+                            <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                                <i class="fas fa-book mr-2 text-indigo-500"></i>Gestión de Libros
+                            </h3>
+                            <a href="books.html" class="quick-action block w-full text-left px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <i class="fas fa-search mr-2 text-blue-500"></i>
+                                        <span>Explorar Catálogo</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </a>
+                            <a href="books.html?action=create" class="quick-action block w-full text-left px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <i class="fas fa-plus mr-2 text-green-500"></i>
+                                        <span>Agregar Nuevo Libro</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Authors Actions -->
+                        <div class="space-y-3">
+                            <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                                <i class="fas fa-user-edit mr-2 text-green-500"></i>Gestión de Autores
+                            </h3>
+                            <a href="authors.html" class="quick-action block w-full text-left px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <i class="fas fa-list mr-2 text-blue-500"></i>
+                                        <span>Ver Todos los Autores</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </a>
+                            <a href="authors.html?action=create" class="quick-action block w-full text-left px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <i class="fas fa-user-plus mr-2 text-green-500"></i>
+                                        <span>Registrar Nuevo Autor</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Loans Actions -->
+                        <div class="space-y-3">
+                            <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                                <i class="fas fa-exchange-alt mr-2 text-blue-500"></i>Sistema de Préstamos
+                            </h3>
+                            <a href="loans.html" class="quick-action block w-full text-left px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <i class="fas fa-list-alt mr-2 text-blue-500"></i>
+                                        <span>Gestionar Préstamos</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </a>
+                            <a href="loans.html?action=create" class="quick-action block w-full text-left px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <i class="fas fa-handshake mr-2 text-green-500"></i>
+                                        <span>Nuevo Préstamo</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Admin Actions -->
+                        <div id="admin-actions" class="space-y-3 hidden">
+                            <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                                <i class="fas fa-cog mr-2 text-purple-500"></i>Administración
+                            </h3>
+                            <a href="admin.html" class="quick-action block w-full text-left px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <i class="fas fa-users-cog mr-2 text-purple-500"></i>
+                                        <span>Gestión de Usuarios</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </a>
+                            <a href="admin.html?action=reports" class="quick-action block w-full text-left px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <i class="fas fa-chart-bar mr-2 text-purple-500"></i>
+                                        <span>Reportes del Sistema</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Profile Sidebar -->
+            <div class="space-y-6">
+                <!-- User Info Card -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Tu Información</h2>
+                    <div id="user-info" class="space-y-3">
+                        <!-- Se carga dinámicamente -->
+                        <div class="flex justify-center">
+                            <i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Actividad Reciente</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3 text-sm text-gray-600">
+                            <i class="fas fa-book text-green-500"></i>
+                            <span>Último acceso: Hoy</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-sm text-gray-600">
+                            <i class="fas fa-clock text-blue-500"></i>
+                            <span>Sesión activa</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-sm text-gray-600">
+                            <i class="fas fa-shield-alt text-purple-500"></i>
+                            <span id="role-badge">Cargando rol...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Container -->
+    <div id="message-container" class="fixed top-4 right-4 z-50"></div>
+</body>
+</html>

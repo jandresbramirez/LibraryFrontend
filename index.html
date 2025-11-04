@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Digital - Inicio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .book-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-book-open text-2xl"></i>
+                    <h1 class="text-xl font-bold">Biblioteca Digital</h1>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="auth.html" class="bg-white text-indigo-600 px-4 py-2 rounded-lg font-semibold hover:bg-indigo-50 transition duration-200">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Acceder
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-5xl font-bold mb-6">Bienvenido a la Biblioteca Digital</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">
+                Descubre un mundo de conocimiento. Explora nuestro catálogo de libros, autores y sumérgete en la lectura.
+            </p>
+            <div class="space-x-4">
+                <a href="auth.html" 
+                   class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-indigo-50 transition duration-200">
+                    <i class="fas fa-key mr-2"></i>Acceder al Sistema
+                </a>
+                <a href="#features" 
+                   class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-white hover:text-indigo-600 transition duration-200">
+                    <i class="fas fa-info-circle mr-2"></i>Más Información
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Nuestros Servicios</h2>
+            <p class="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+                Gestionamos una completa colección bibliográfica con sistema de préstamos digitales
+            </p>
+            
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center p-6 book-card bg-white rounded-lg shadow-md border">
+                    <i class="fas fa-book text-4xl text-indigo-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-3">Catálogo de Libros</h3>
+                    <p class="text-gray-600">Amplia colección de libros organizados por categorías y autores.</p>
+                </div>
+                
+                <div class="text-center p-6 book-card bg-white rounded-lg shadow-md border">
+                    <i class="fas fa-user-edit text-4xl text-green-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-3">Gestión de Autores</h3>
+                    <p class="text-gray-600">Información completa sobre autores y sus obras literarias.</p>
+                </div>
+                
+                <div class="text-center p-6 book-card bg-white rounded-lg shadow-md border">
+                    <i class="fas fa-exchange-alt text-4xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-3">Sistema de Préstamos</h3>
+                    <p class="text-gray-600">Control eficiente de préstamos y devoluciones de libros.</p>
+                </div>
+                
+                <div class="text-center p-6 book-card bg-white rounded-lg shadow-md border">
+                    <i class="fas fa-users-cog text-4xl text-purple-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-3">Gestión de Usuarios</h3>
+                    <p class="text-gray-600">Diferentes roles: administrador, editor y usuario estándar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-indigo-50">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <div class="text-4xl font-bold text-indigo-600 mb-2" id="books-count">500+</div>
+                    <p class="text-gray-600">Libros en Catálogo</p>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-green-600 mb-2" id="authors-count">150+</div>
+                    <p class="text-gray-600">Autores Registrados</p>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-blue-600 mb-2" id="users-count">1,200+</div>
+                    <p class="text-gray-600">Usuarios Activos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="hover:text-indigo-300 transition"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-indigo-300 transition"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="hover:text-indigo-300 transition"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p>&copy; 2024 Biblioteca Digital. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>
