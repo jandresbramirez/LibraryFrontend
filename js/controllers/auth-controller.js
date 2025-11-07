@@ -81,8 +81,6 @@ class AuthController {
         const result = await this.authService.login({ email, password });
 
         if (result.success) {
-            // ✅ GUARDAR DATOS DEL USUARIO después del login exitoso
-            await this.loadAndStoreUserData();
             
             this.showMessage('¡Bienvenido a la biblioteca!', 'success');
             setTimeout(() => {
@@ -93,26 +91,6 @@ class AuthController {
         }
 
         this.setLoading('login', false);
-    }
-
-    async loadAndStoreUserData() {
-        try {
-            // ✅ Obtener el perfil del usuario después del login
-            const userService = new UserService(this.authService);
-            const userResult = await userService.getCurrentUserProfile();
-            
-            if (userResult.success) {
-                // ✅ Guardar datos del usuario en localStorage
-                localStorage.setItem('user_name', userResult.user.name);
-                localStorage.setItem('user_email', userResult.user.email);
-                localStorage.setItem('user_id', userResult.user.id);
-                console.log('✅ Datos de usuario guardados:', userResult.user);
-            } else {
-                console.warn('⚠️ No se pudieron cargar los datos del usuario:', userResult.error);
-            }
-        } catch (error) {
-            console.error('❌ Error cargando datos del usuario:', error);
-        }
     }
 
     async handleRegister(event) {

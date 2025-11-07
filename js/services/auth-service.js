@@ -15,13 +15,18 @@ class AuthService {
 
             const data = await response.json();
 
-            if (response.ok) {
-                // Guardar token y datos del usuario
-                localStorage.setItem('token', data.access_token);
-                localStorage.setItem('user_role', this.getRoleFromToken(data.access_token));
-                localStorage.setItem('user_id', this.getUserIdFromToken(data.access_token));
-                
-                return { success: true, token: data.access_token };
+             if (response.ok) {
+            // Guardar token y datos del usuario
+            localStorage.setItem('token', data.access_token);
+            localStorage.setItem('user_role', this.getRoleFromToken(data.access_token));
+            localStorage.setItem('user_id', this.getUserIdFromToken(data.access_token));
+            
+            // ✅ GUARDAR DATOS DEL USUARIO si vienen en la respuesta
+            if (data.user) {
+                localStorage.setItem('user_name', data.user.name);
+                localStorage.setItem('user_email', data.user.email);
+            }
+                return { success: true, token: data.access_token, user: data.user };
             } else {
                 return { success: false, error: data.error };
             }
