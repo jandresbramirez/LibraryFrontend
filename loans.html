@@ -217,6 +217,67 @@
     <!-- Message Container -->
     <div id="message-container" class="fixed top-4 right-4 z-50"></div>
 
+    <script src="js/services/auth-service.js"></script>
+    <script src="js/services/user-service.js"></script>
+    <script src="js/services/author-service.js"></script>
+    <script src="js/services/book-service.js"></script>
+    <script src="js/services/loan-service.js"></script>
+    <script src="js/controllers/loan-controller.js"></script>
+    <script src="js/shared/auth-check.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            AuthCheck.redirectIfNotAuthenticated();
+            
+            const authService = new AuthService();
+            const userService = new UserService(authService);
+            const authorService = new AuthorService(authService);
+            const bookService = new BookService(authService, authorService);
+            const loanService = new LoanService(authService, userService, bookService);
+            const loanController = new LoanController(loanService, authService, userService, bookService);
+            
+            // Configurar UI según el rol
+            setupUIForRole(authService);
+            
+            loanController.init();
+
+            // Hacer disponible globalmente para los botones
+            window.loanController = loanController;
+
+            // Configurar logout
+            document.getElementById('logout-btn').addEventListener('click', async () => {
+                const result = await authService.logout();
+                if (result.success) {
+                    window.location.href = 'index.html';
+                }
+            });
+
+            function setupUIForRole(authService) {
+                const userRole = authService.getUserRole();
+                const roleDisplay = document.getElementById('user-role-display');
+                const loansTitle = document.getElementById('loans-title');
+                const userHelpText = document.getElementById('user-help-text');
+                
+                if (roleDisplay) {
+                    roleDisplay.textContent = `Rol: ${userRole}`;
+                }
+                
+                if (loansTitle) {
+                    if (authService.isUser()) {
+                        loansTitle.textContent = 'Mis Préstamos';
+                        if (userHelpText) {
+                            userHelpText.textContent = 'Solo puedes crear préstamos para tu propia cuenta';
+                        }
+                    } else {
+                        loansTitle.textContent = 'Todos los Préstamos';
+                        if (userHelpText) {
+                            userHelpText.textContent = 'Selecciona el usuario para el préstamo';
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
     <style>
         .loan-card {
             transition: all 0.3s ease;

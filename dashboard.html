@@ -334,5 +334,25 @@
 
     <!-- Message Container -->
     <div id="message-container" class="fixed top-4 right-4 z-50"></div>
+
+    <script src="js/services/auth-service.js"></script>
+    <script src="js/services/user-service.js"></script>
+    <script src="js/controllers/dashboard-controller.js"></script>
+    <script src="js/shared/auth-check.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            AuthCheck.redirectIfNotAuthenticated();
+            
+            const dashboardController = new DashboardController();
+            dashboardController.init();
+
+            // Mobile menu toggle
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('hidden');
+            });
+        });
+    </script>
+
 </body>
 </html>

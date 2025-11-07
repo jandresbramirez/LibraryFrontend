@@ -107,5 +107,18 @@
     <!-- Message Container -->
     <div id="message-container" class="fixed top-4 right-4 z-50"></div>
     
+    <script src="js/services/auth-service.js"></script>
+    <script src="js/controllers/auth-controller.js"></script>
+    <script src="js/shared/auth-check.js"></script>
+    <script>
+        // Redirigir si ya está autenticado
+        document.addEventListener('DOMContentLoaded', () => {
+            AuthCheck.redirectIfAuthenticated('dashboard.html');
+            
+            const authController = new AuthController();
+            authController.init();
+        });
+    </script>
+
 </body>
 </html>

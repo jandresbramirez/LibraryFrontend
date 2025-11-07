@@ -222,5 +222,30 @@
     <!-- Message Container -->
     <div id="message-container" class="fixed top-4 right-4 z-50"></div>
 
+    <script src="js/services/auth-service.js"></script>
+    <script src="js/services/user-service.js"></script>
+    <script src="js/services/loan-service.js"></script>
+    <script src="js/controllers/profile-controller.js"></script>
+    <script src="js/shared/auth-check.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            AuthCheck.redirectIfNotAuthenticated();
+            
+            const authService = new AuthService();
+            const userService = new UserService(authService);
+            const loanService = new LoanService(authService, userService);
+            const profileController = new ProfileController(userService, authService, loanService);
+            profileController.init();
+
+            // Configurar logout
+            document.getElementById('logout-btn').addEventListener('click', async () => {
+                const result = await authService.logout();
+                if (result.success) {
+                    window.location.href = 'index.html';
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>
