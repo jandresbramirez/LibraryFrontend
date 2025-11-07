@@ -1,15 +1,19 @@
-// Utilidades de verificación de autenticación
+// js/shared/auth-check.js
 class AuthCheck {
-    static redirectIfNotAuthenticated(redirectTo = 'auth.html') {
+    // ✅ AGREGAR ESTE MÉTODO FALTANTE
+    static isAuthenticated() {
         const authService = new AuthService();
-        if (!authService.isAuthenticated()) {
+        return authService.isAuthenticated();
+    }
+
+    static redirectIfNotAuthenticated(redirectTo = 'auth.html') {
+        if (!this.isAuthenticated()) {
             window.location.href = redirectTo;
         }
     }
 
     static redirectIfAuthenticated(redirectTo = 'dashboard.html') {
-        const authService = new AuthService();
-        if (authService.isAuthenticated()) {
+        if (this.isAuthenticated()) {
             window.location.href = redirectTo;
         }
     }
@@ -22,3 +26,6 @@ class AuthCheck {
         this.redirectIfAuthenticated();
     }
 }
+
+// ✅ Asegurar que esté disponible globalmente
+window.AuthCheck = AuthCheck;

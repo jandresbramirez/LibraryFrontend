@@ -4,107 +4,155 @@ class AuthorService {
         this.baseURL = 'https://vigilant-spoon-q7qw9r9r7qpwc49r5-5000.app.github.dev';
     }
 
+    // ✅ Headers completos para requests autenticadas
+    // ✅ Headers mejorados
+    getRequestHeaders() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.warn('⚠️ No hay token disponible');
+        }
+        
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+    }
+
     async getAllAuthors() {
         try {
-            // ✅ Este endpoint NO requiere autenticación (según tu controller)
             const response = await fetch(`${this.baseURL}/authors`);
-
+            
             if (response.ok) {
-                return { success: true, authors: await response.json() };
+                const authors = await response.json();
+                return { success: true, authors };
             } else {
                 const error = await response.json();
-                return { success: false, error: error.error };
+                return { success: false, error: error.error || 'Error al obtener autores' };
             }
         } catch (error) {
+            console.error('Error en getAllAuthors:', error);
             return { success: false, error: 'Error de conexión' };
         }
     }
 
     async getAuthorById(authorId) {
         try {
-            // ✅ Este endpoint SÍ requiere autenticación
             const response = await fetch(`${this.baseURL}/authors/${authorId}`, {
-                headers: this.authService.getAuthHeaders()
+                headers: this.getRequestHeaders()
             });
 
             if (response.ok) {
-                return { success: true, author: await response.json() };
+                const author = await response.json();
+                return { success: true, author };
             } else {
                 const error = await response.json();
-                return { success: false, error: error.error };
+                return { success: false, error: error.error || 'Error al buscar autor' };
             }
         } catch (error) {
+            console.error('Error en getAuthorById:', error);
             return { success: false, error: 'Error de conexión' };
         }
     }
 
     async createAuthor(authorData) {
         try {
-            // ✅ Requiere autenticación y rol admin o editor
+            console.log('🔍 Iniciando createAuthor...');
+            
+            // ✅ VERIFICACIÓN CORREGIDA
             if (!this.authService.hasRole(['admin', 'editor'])) {
-                return { success: false, error: 'No tienes permisos para crear autores' };
+                const userRole = this.authService.getUserRole();
+                console.log(`❌ Permisos insuficientes. Rol actual: ${userRole}, Requerido: admin o editor`);
+                return { success: false, error: 'No tienes permisos para crear autores. Se requiere rol admin o editor.' };
             }
+
+            // ✅ Verificar autenticación
+            if (!this.authService.isAuthenticated()) {
+                console.log('❌ Usuario no autenticado');
+                return { success: false, error: 'Debes iniciar sesión para realizar esta acción' };
+            }
+
+            console.log('🔍 Enviando datos:', authorData);
+            console.log('🔍 Headers:', this.getRequestHeaders());
 
             const response = await fetch(`${this.baseURL}/authors`, {
                 method: 'POST',
-                headers: this.authService.getAuthHeaders(),
+                headers: this.getRequestHeaders(),
                 body: JSON.stringify(authorData)
             });
 
-            if (response.status === 201) {
-                return { success: true, author: await response.json() };
-            } else {
-                const error = await response.json();
-                return { success: false, error: error.error };
+            console.log('🔍 Response status:', response.status);
+            
+            const responseText = await response.text();
+            console.log('🔍 Response body:', responseText);
+
+            let responseData;
+            try {
+                responseData = JSON.parse(responseText);
+            } catch {
+                responseData = { error: 'Respuesta no válida del servidor' };
             }
+
+            if (response.ok || response.status === 201) {
+                console.log('✅ Autor creado exitosamente:', responseData);
+                return { success: true, author: responseData };
+            } else {
+                console.log('❌ Error del servidor:', responseData);
+                return { 
+                    success: false, 
+                    error: responseData.error || responseData.message || 'Error al crear autor' 
+                };
+            }
+
         } catch (error) {
-            return { success: false, error: 'Error de conexión' };
+            console.error('🔍 Error de conexión:', error);
+            return { success: false, error: 'Error de conexión con el servidor' };
         }
     }
-
+    
     async updateAuthor(authorId, authorData) {
         try {
-            // ✅ Requiere autenticación y rol admin o editor
             if (!this.authService.hasRole(['admin', 'editor'])) {
                 return { success: false, error: 'No tienes permisos para actualizar autores' };
             }
 
             const response = await fetch(`${this.baseURL}/authors/${authorId}`, {
                 method: 'PUT',
-                headers: this.authService.getAuthHeaders(),
+                headers: this.getRequestHeaders(),
                 body: JSON.stringify(authorData)
             });
 
             if (response.ok) {
-                return { success: true, author: await response.json() };
+                const author = await response.json();
+                return { success: true, author };
             } else {
                 const error = await response.json();
-                return { success: false, error: error.error };
+                return { success: false, error: error.error || 'Error al actualizar autor' };
             }
         } catch (error) {
+            console.error('Error en updateAuthor:', error);
             return { success: false, error: 'Error de conexión' };
         }
     }
 
     async deleteAuthor(authorId) {
         try {
-            // ✅ Requiere autenticación y rol admin
             if (!this.authService.isAdmin()) {
                 return { success: false, error: 'Solo los administradores pueden eliminar autores' };
             }
 
             const response = await fetch(`${this.baseURL}/authors/${authorId}`, {
                 method: 'DELETE',
-                headers: this.authService.getAuthHeaders()
+                headers: this.getRequestHeaders()
             });
 
             if (response.ok) {
                 return { success: true, message: 'Autor eliminado correctamente' };
             } else {
                 const error = await response.json();
-                return { success: false, error: error.error };
+                return { success: false, error: error.error || 'Error al eliminar autor' };
             }
         } catch (error) {
+            console.error('Error en deleteAuthor:', error);
             return { success: false, error: 'Error de conexión' };
         }
     }

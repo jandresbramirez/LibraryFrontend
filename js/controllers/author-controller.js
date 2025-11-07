@@ -12,8 +12,15 @@ class AuthorController {
     setupAuthorEvents() {
         // Botón para crear autor
         const createAuthorForm = document.getElementById('create-author-form');
+        console.log('🔍 createAuthorForm encontrado:', !!createAuthorForm);
+        
         if (createAuthorForm) {
-            createAuthorForm.addEventListener('submit', (e) => this.handleCreateAuthor(e));
+            createAuthorForm.addEventListener('submit', (e) => {
+                console.log('🎯 Evento submit disparado!');
+                this.handleCreateAuthor(e);
+            });
+        } else {
+            console.error('❌ create-author-form NO encontrado en el DOM');
         }
 
         // Botón para actualizar autor
@@ -40,28 +47,44 @@ class AuthorController {
     }
 
     async handleCreateAuthor(event) {
-        event.preventDefault();
+        // ✅ Manejo seguro del event
+        if (event && typeof event.preventDefault === 'function') {
+            event.preventDefault();
+        }
         
-        const name = document.getElementById('author-name').value;
+        try {
+            console.log('🎯 handleCreateAuthor ejecutado');
+            
+            const nameInput = document.getElementById('author-name');
+            const name = nameInput ? nameInput.value.trim() : '';
+            console.log('🔍 Nombre capturado:', name);
 
-        if (!name) {
-            this.showMessage('El nombre del autor es obligatorio', 'error');
-            return;
+            if (!name) {
+                this.showMessage('El nombre del autor es obligatorio', 'error');
+                return;
+            }
+
+            this.setLoading('create-author-btn', true, 'Creando...');
+
+            const result = await this.authorService.createAuthor({ name });
+            console.log('🔍 Resultado de createAuthor:', result);
+
+            if (result.success) {
+                this.showMessage(`Autor "${result.author.name}" creado exitosamente`, 'success');
+                if (document.getElementById('create-author-form')) {
+                    document.getElementById('create-author-form').reset();
+                }
+                this.loadAllAuthors();
+            } else {
+                this.showMessage(result.error, 'error');
+            }
+
+        } catch (error) {
+            console.error('❌ Error en handleCreateAuthor:', error);
+            this.showMessage('Error al crear autor: ' + error.message, 'error');
+        } finally {
+            this.setLoading('create-author-btn', false, 'Crear Autor');
         }
-
-        this.setLoading('create-author-btn', true, 'Creando...');
-
-        const result = await this.authorService.createAuthor({ name });
-
-        if (result.success) {
-            this.showMessage(`Autor "${result.author.name}" creado exitosamente`, 'success');
-            document.getElementById('create-author-form').reset();
-            this.loadAllAuthors(); // Recargar la lista
-        } else {
-            this.showMessage(result.error, 'error');
-        }
-
-        this.setLoading('create-author-btn', false, 'Crear Autor');
     }
 
     async handleUpdateAuthor(event) {
@@ -209,14 +232,28 @@ class AuthorController {
         if (button) {
             if (loading) {
                 button.disabled = true;
+                // ✅ Guardar el texto original si no existe
+                if (!button.getAttribute('data-original-text')) {
+                    button.setAttribute('data-original-text', button.textContent);
+                }
                 button.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> ${loadingText}`;
             } else {
                 button.disabled = false;
-                // Restaurar texto original (podrías guardarlo en data-attribute)
-                const originalText = button.getAttribute('data-original-text') || 'Botón';
+                // ✅ Usar el texto original guardado o un texto por defecto
+                const originalText = button.getAttribute('data-original-text') || this.getDefaultButtonText(buttonId);
                 button.innerHTML = originalText;
             }
         }
+    }
+
+    // ✅ Método auxiliar para textos por defecto
+    getDefaultButtonText(buttonId) {
+        const texts = {
+            'create-author-btn': '<i class="fas fa-plus mr-2"></i>Crear Autor',
+            'search-author-btn': '<i class="fas fa-search mr-2"></i>Buscar Autor',
+            'update-author-btn': '<i class="fas fa-save mr-2"></i>Actualizar Autor'
+        };
+        return texts[buttonId] || 'Botón';
     }
 
     showMessage(message, type) {
