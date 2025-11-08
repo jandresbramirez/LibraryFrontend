@@ -26,6 +26,31 @@ class UserService {
         }
     }
 
+    async getCurrentUserProfile() {
+        try {
+            console.log('🔍 getCurrentUserProfile called');
+            
+            const userId = this.authService.getUserId();
+            console.log('🔍 User ID from authService:', userId);
+            
+            if (!userId) {
+                console.error('❌ No user ID available');
+                return { success: false, error: 'Usuario no autenticado' };
+            }
+
+            console.log('🔍 Getting profile for user ID:', userId);
+            
+            // ✅ Usa el endpoint existente /users/{id}
+            const result = await this.getUserById(parseInt(userId));
+            console.log('🔍 Result from getUserById:', result);
+            return result;
+            
+        } catch (error) {
+            console.error('❌ Error in getCurrentUserProfile:', error);
+            return { success: false, error: 'Error obteniendo perfil' };
+        }
+    }
+
     async getUserById(userId) {
         try {
             // ✅ Requiere autenticación y rol admin, editor o user
@@ -98,15 +123,25 @@ class UserService {
 
     async updateUser(userId, userData) {
         try {
-            // ✅ Requiere autenticación y rol admin o editor
-            // Los usuarios normales solo pueden actualizar su propio perfil
-            if (this.authService.isUser()) {
-                const currentUserId = this.authService.getUserId();
-                if (parseInt(userId) !== parseInt(currentUserId)) {
-                    return { success: false, error: 'Solo puedes actualizar tu propio perfil' };
+            // Si el usuario es 'user' y está actualizando su propio perfil, usar endpoint /profile
+            if (this.authService.isUser() && parseInt(userId) === parseInt(this.authService.getUserId())) {
+                console.log('🔍 Usuario actualizando su propio perfil, usando endpoint /profile');
+                
+                const response = await fetch(`${this.baseURL}/profile`, {
+                    method: 'PUT',
+                    headers: this.authService.getAuthHeaders(),
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    return { success: true, user: await response.json() };
+                } else {
+                    const error = await response.json();
+                    return { success: false, error: error.error };
                 }
             }
 
+            // Para admin/editor o usuarios actualizando otros perfiles, usar el endpoint normal
             const response = await fetch(`${this.baseURL}/users/${userId}`, {
                 method: 'PUT',
                 headers: this.authService.getAuthHeaders(),

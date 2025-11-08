@@ -4,89 +4,145 @@ class ProfileController {
         this.authService = authService;
         this.loanService = loanService;
         this.currentUser = null;
+        console.log('✅ ProfileController instanciado');
     }
 
     async init() {
-        await this.loadUserProfile();
-        this.setupEventListeners();
-        this.loadUserLoans();
-        this.setupUI();
+        console.log('🎯 ProfileController.init() ejecutado');
+        try {
+            console.log('🔍 Iniciando carga de perfil...');
+            await this.loadUserProfile();
+            console.log('🔍 Iniciando setup de event listeners...');
+            this.setupEventListeners();
+            console.log('🔍 Iniciando carga de préstamos...');
+            await this.loadUserLoans();
+            console.log('🔍 Iniciando setup de UI...');
+            this.setupUI();
+            console.log('✅ ProfileController init completado exitosamente');
+        } catch (error) {
+            console.error('❌ Error en ProfileController.init:', error);
+            this.showMessage('Error al cargar el perfil', 'error');
+        }
     }
 
     async loadUserProfile() {
-        const result = await this.userService.getCurrentUserProfile();
-        
-        if (result.success) {
-            this.currentUser = result.user;
-            this.displayUserInfo(this.currentUser);
-            this.populateUpdateForm(this.currentUser);
-        } else {
-            this.showMessage('Error cargando perfil: ' + result.error, 'error');
+        console.log('🔍 loadUserProfile llamado - INICIO');
+        try {
+            console.log('🔍 Llamando userService.getCurrentUserProfile()...');
+            const result = await this.userService.getCurrentUserProfile();
+            console.log('📡 Resultado de getCurrentUserProfile:', result);
+            
+            if (result.success) {
+                this.currentUser = result.user;
+                console.log('✅ Usuario cargado:', this.currentUser);
+                this.displayUserInfo(this.currentUser);
+                this.populateUpdateForm(this.currentUser);
+            } else {
+                console.error('❌ Error del servicio:', result.error);
+                this.showMessage('Error cargando perfil: ' + result.error, 'error');
+            }
+        } catch (error) {
+            console.error('❌ Excepción en loadUserProfile:', error);
+            this.showMessage('Error de conexión al cargar perfil', 'error');
         }
+        console.log('🔍 loadUserProfile llamado - FIN');
     }
 
     async loadUserLoans() {
-        const result = await this.loanService.getUserLoans();
-        
-        if (result.success) {
-            this.displayUserLoans(result.loans);
-            this.updateLoanStats(result.loans);
+        console.log('🔍 loadUserLoans llamado - INICIO');
+        try {
+            console.log('🔍 Llamando loanService.getUserLoans()...');
+            const result = await this.loanService.getUserLoans();
+            console.log('📡 Resultado de getUserLoans:', result);
+            
+            if (result.success) {
+                this.displayUserLoans(result.loans);
+                this.updateLoanStats(result.loans);
+            } else {
+                console.log('ℹ️  No se pudieron cargar préstamos:', result.error);
+                // Mostrar estado vacío
+                this.displayUserLoans([]);
+            }
+        } catch (error) {
+            console.error('❌ Excepción en loadUserLoans:', error);
+            // Mostrar estado vacío
+            this.displayUserLoans([]);
         }
+        console.log('🔍 loadUserLoans llamado - FIN');
     }
 
     setupEventListeners() {
-        // Formulario de actualización
-        document.getElementById('update-profile-form').addEventListener('submit', 
-            (e) => this.handleUpdateProfile(e)
-        );
+        console.log('🔍 setupEventListeners llamado');
+        
+        const updateForm = document.getElementById('update-profile-form');
+        if (updateForm) {
+            updateForm.addEventListener('submit', (e) => this.handleUpdateProfile(e));
+            console.log('✅ Event listener agregado a update-profile-form');
+        } else {
+            console.error('❌ update-profile-form no encontrado');
+        }
 
-        // Botón de reset
-        document.getElementById('reset-form-btn').addEventListener('click', 
-            () => this.populateUpdateForm(this.currentUser)
-        );
+        const resetBtn = document.getElementById('reset-form-btn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => this.populateUpdateForm(this.currentUser));
+        }
 
-        // Acciones de cuenta
-        document.getElementById('export-data-btn').addEventListener('click',
-            () => this.handleExportData()
-        );
+        const exportBtn = document.getElementById('export-data-btn');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => this.handleExportData());
+        }
 
-        document.getElementById('change-password-btn').addEventListener('click',
-            () => this.handleChangePassword()
-        );
+        const changePwdBtn = document.getElementById('change-password-btn');
+        if (changePwdBtn) {
+            changePwdBtn.addEventListener('click', () => this.handleChangePassword());
+        }
 
-        document.getElementById('delete-account-btn').addEventListener('click',
-            () => this.handleDeleteAccount()
-        );
+        const deleteBtn = document.getElementById('delete-account-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', () => this.handleDeleteAccount());
+        }
     }
 
     setupUI() {
-        // Configurar bienvenida
+        console.log('🔍 setupUI llamado');
         const userWelcome = document.getElementById('user-welcome');
         if (userWelcome && this.currentUser) {
             userWelcome.textContent = `Hola, ${this.currentUser.name}`;
+            console.log('✅ Welcome message actualizado');
         }
     }
 
     displayUserInfo(user) {
-        // Información principal
-        document.getElementById('profile-name').textContent = user.name;
-        document.getElementById('profile-email').textContent = user.email;
-        document.getElementById('profile-id').textContent = user.id;
+        console.log('🔍 displayUserInfo llamado con:', user);
+        
+        const nameElement = document.getElementById('profile-name');
+        const emailElement = document.getElementById('profile-email');
+        const idElement = document.getElementById('profile-id');
+        
+        if (nameElement) nameElement.textContent = user.name || 'No disponible';
+        if (emailElement) emailElement.textContent = user.email || 'No disponible';
+        if (idElement) idElement.textContent = user.id || '--';
 
+        console.log('✅ Información de usuario mostrada');
+        
         // Badge de rol
         const roleBadge = document.getElementById('role-badge');
-        const role = this.authService.getUserRole();
-        const roleColors = {
-            'admin': 'bg-purple-100 text-purple-800 border border-purple-200',
-            'editor': 'bg-blue-100 text-blue-800 border border-blue-200',
-            'user': 'bg-green-100 text-green-800 border border-green-200'
-        };
+        if (roleBadge) {
+            const role = this.authService.getUserRole();
+            console.log('🔍 Rol del usuario:', role);
+            
+            const roleColors = {
+                'admin': 'bg-purple-100 text-purple-800 border border-purple-200',
+                'editor': 'bg-blue-100 text-blue-800 border border-blue-200',
+                'user': 'bg-green-100 text-green-800 border border-green-200'
+            };
 
-        roleBadge.className = `inline-block px-3 py-1 rounded-full text-sm font-medium mb-4 ${roleColors[role] || 'bg-gray-100 text-gray-800'}`;
-        roleBadge.innerHTML = `
-            <i class="fas ${role === 'admin' ? 'fa-crown' : role === 'editor' ? 'fa-edit' : 'fa-user'} mr-1"></i>
-            ${role.toUpperCase()}
-        `;
+            roleBadge.className = `inline-block px-3 py-1 rounded-full text-sm font-medium mb-4 ${roleColors[role] || 'bg-gray-100 text-gray-800'}`;
+            roleBadge.innerHTML = `
+                <i class="fas ${role === 'admin' ? 'fa-crown' : role === 'editor' ? 'fa-edit' : 'fa-user'} mr-1"></i>
+                ${role ? role.toUpperCase() : 'USUARIO'}
+            `;
+        }
     }
 
     populateUpdateForm(user) {

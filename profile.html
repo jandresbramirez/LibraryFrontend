@@ -228,22 +228,54 @@
     <script src="js/controllers/profile-controller.js"></script>
     <script src="js/shared/auth-check.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            AuthCheck.redirectIfNotAuthenticated();
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 profile.html - DOM cargado');
             
-            const authService = new AuthService();
-            const userService = new UserService(authService);
-            const loanService = new LoanService(authService, userService);
-            const profileController = new ProfileController(userService, authService, loanService);
-            profileController.init();
+            // Verificar autenticación
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.log('❌ No autenticado, redirigiendo...');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            console.log('✅ Usuario autenticado');
+            
+            try {
+                const authService = new AuthService();
+                const userService = new UserService(authService);
+                const loanService = new LoanService(authService, userService);
+                const profileController = new ProfileController(userService, authService, loanService);
+                
+                console.log('🔍 Servicios inicializados, iniciando profileController...');
+                await profileController.init();
+                console.log('✅ profileController init completado');
+
+            } catch (error) {
+                console.error('❌ Error inicializando profile:', error);
+                // Mostrar error al usuario
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'fixed top-4 right-4 bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 shadow-lg z-50';
+                messageDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+                        <span>Error cargando el perfil</span>
+                    </div>
+                `;
+                document.body.appendChild(messageDiv);
+            }
 
             // Configurar logout
-            document.getElementById('logout-btn').addEventListener('click', async () => {
-                const result = await authService.logout();
-                if (result.success) {
-                    window.location.href = 'index.html';
-                }
-            });
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async () => {
+                    const authService = new AuthService();
+                    const result = await authService.logout();
+                    if (result.success) {
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
         });
     </script>
 

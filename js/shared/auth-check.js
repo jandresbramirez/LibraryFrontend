@@ -1,6 +1,8 @@
 // js/shared/auth-check.js
 class AuthCheck {
-    // ✅ AGREGAR ESTE MÉTODO FALTANTE
+    
+    // ✅ Método de verificación de autenticación
+
     static isAuthenticated() {
         const authService = new AuthService();
         return authService.isAuthenticated();
