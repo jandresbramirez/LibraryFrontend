@@ -3,7 +3,8 @@ class LoanService {
         this.authService = authService;
         this.userService = userService;
         this.bookService = bookService;
-        this.baseURL = 'https://vigilant-spoon-q7qw9r9r7qpwc49r5-5000.app.github.dev';
+        this.baseURL = window.APP_CONFIG?.API_BASE_URL || 
+                      'https://vigilant-spoon-q7qw9r9r7qpwc49r5-5000.app.github.dev';
     }
 
     async getAllLoans() {
