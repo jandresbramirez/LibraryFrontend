@@ -11,7 +11,6 @@ class UserService {
             if (!this.authService.isAdmin()) {
                 return { success: false, error: 'No tienes permisos para ver todos los usuarios' };
             }
-
             const response = await fetch(`${this.baseURL}/users`, {
                 headers: this.authService.getAuthHeaders()
             });
